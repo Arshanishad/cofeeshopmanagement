@@ -29,7 +29,7 @@ class _OrderScreenState extends ConsumerState<OrderScreen> {
     final fromDate=ref.watch(fromDateProvider);
     final toDate=ref.watch(toDateProvider);
     return  Scaffold(
-      backgroundColor: Colors.redAccent,
+
       body: Padding(
         padding: EdgeInsets.all(w * 0.02),
         child: SingleChildScrollView(
@@ -49,7 +49,7 @@ class _OrderScreenState extends ConsumerState<OrderScreen> {
                   decoration: InputDecoration(
                     contentPadding: EdgeInsets.symmetric(
                         horizontal: w * 0.02, vertical: w * 0.02),
-                    hintText: 'Search Invoice no',
+                    hintText: 'Search orderId',
                     enabledBorder: OutlineInputBorder(
                       borderSide: const BorderSide(
                         color: Color(0x00000000),
@@ -131,7 +131,7 @@ class _OrderScreenState extends ConsumerState<OrderScreen> {
                             child: Container(
                               width: w,
                               decoration: BoxDecoration(
-                                  color: Colors.white,
+                                  color: Colors.grey.shade200,
                                   borderRadius:
                                   BorderRadiusDirectional.circular(
                                       w * 0.02)),
@@ -225,7 +225,7 @@ class _OrderScreenState extends ConsumerState<OrderScreen> {
             );
           }
         },
-        backgroundColor: Palette.lightRedColor,
+        backgroundColor: Palette.darkRedColor,
         child: Icon(Icons.add, color: Colors.white, size: w * 0.08),
       ),
     );

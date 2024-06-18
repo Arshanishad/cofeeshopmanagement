@@ -137,12 +137,13 @@ class _PendingOrderViewState extends ConsumerState<OrderViewPage> {
       data: (data) {
         return Scaffold(
           appBar: AppBar(
+            elevation: 0,
+            backgroundColor: Palette.redLightColor,
             title: Text("${titleController.text} Order",
                 style: GoogleFonts.nunitoSans(
                     color: Colors.white,
                     fontSize: h * 0.03,
                     fontWeight: FontWeight.w600)),
-            backgroundColor: Palette.redLightColor,
             centerTitle: true,
             leading: IconButton(
               onPressed: () {

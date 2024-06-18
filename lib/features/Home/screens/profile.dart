@@ -50,6 +50,12 @@ class _ProfilePageState extends ConsumerState<ProfilePage> {
     return Scaffold(
       // backgroundColor: Colors.white,
       appBar: AppBar(
+        leading: IconButton(
+          icon: Icon(Icons.arrow_back),
+          onPressed: () {
+            Navigator.of(context).pop();
+          },
+        ),
         title: Text(
           "Profile",
           style: GoogleFonts.nunitoSans(
