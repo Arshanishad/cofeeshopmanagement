@@ -1,7 +1,7 @@
+import 'package:flutter/material.dart';
 import 'package:coffee_shop_management/core/pallete/theme.dart';
 import 'package:coffee_shop_management/features/order/screen/orders_tabbarview.dart';
 import 'package:coffee_shop_management/features/product/screen/product_add.dart';
-import 'package:flutter/material.dart';
 import 'profile.dart';
 import 'home_page.dart';
 
@@ -34,6 +34,7 @@ class _NavigationScreenState extends State<NavigationScreen> {
         index: pageIndex,
         children: pages,
       ),
+
       floatingActionButton: FloatingActionButton(
         onPressed: () {
           Navigator.push(context, MaterialPageRoute(builder: (context) => ProductAddScreen()));
@@ -64,7 +65,7 @@ class _NavigationScreenState extends State<NavigationScreen> {
             SizedBox(width: 48.0), // The width of the center button space
             IconButton(
               icon: Icon(Icons.person),
-              onPressed: () => _onItemTapped(2),  // Corrected index to 2
+              onPressed: () => _onItemTapped(2),  // Corrected index to 2 for ProfilePage
               color: pageIndex == 2 ? Palette.redLightColor : Colors.grey,
             ),
           ],

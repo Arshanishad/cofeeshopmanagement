@@ -81,6 +81,8 @@ void confirmBox(){
   }
   @override
   Widget build(BuildContext context) {
+    final h = MediaQuery.of(context).size.height;
+    final w = MediaQuery.of(context).size.width;
     return Material(
       child: SingleChildScrollView(
         scrollDirection: Axis.vertical,

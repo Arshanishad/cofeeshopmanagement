@@ -26,6 +26,8 @@ class _OrderScreenState extends ConsumerState<OrderScreen> {
   TextEditingController searchController = TextEditingController();
   @override
   Widget build(BuildContext context) {
+    final h = MediaQuery.of(context).size.height;
+    final w = MediaQuery.of(context).size.width;
     final fromDate=ref.watch(fromDateProvider);
     final toDate=ref.watch(toDateProvider);
     return  Scaffold(

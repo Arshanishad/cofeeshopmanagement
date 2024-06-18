@@ -113,13 +113,10 @@ class LoginRepository {
 
   Future<int> getUserUid() async {
     try {
-      DocumentSnapshot id = await _firestore.collection('settings').doc(
-          'settings').get();
-      int uid = id['userId'];
-      uid++;
-      await _firestore.collection('settings').doc('settings').update(
-          {'userId': FieldValue.increment(1)});
-      return uid;
+      DocumentSnapshot settingsDoc = await _firestore.collection('settings').doc('settings').get();
+      int uid = settingsDoc.exists ? settingsDoc['userId'] ?? 0 : 0;
+      await _firestore.collection('settings').doc('settings').update({'userId': FieldValue.increment(1)});
+      return uid + 1;
     } catch (e) {
       if (kDebugMode) {
         print("Error getting user UID: $e");
@@ -128,43 +125,41 @@ class LoginRepository {
     }
   }
 
-  FutureEither<UserModel> createUser(UserModel userModel) async {
+  Future<Either<Failure, UserModel>> createUser(UserModel userModel) async {
     try {
-      int a = await getUserUid();
+      int uid = await getUserUid();
       if (kDebugMode) {
-        print("Generated UID: U$a");
+        print("Generated UID: U$uid");
       }
-      DocumentReference ref = _userCollection.doc("U$a");
-      await ref.set(userModel.toMap());
+
+      DocumentReference userRef = _userCollection.doc("U$uid");
+      await userRef.set(userModel.toMap());
       if (kDebugMode) {
-        print("User document created: U$a");
+        print("User document created: U$uid");
       }
-      var pro = await ref.get();
-      if (kDebugMode) {
-        print("Fetched created document: ${pro.exists}");
-      }
-      var copy = userModel.copyWith(
-        reference: ref,
-        uid: "U$a",
-        search: setSearchParam(
-            "S$a ${userModel.name} ${userModel.phoneNumber} ${userModel
-                .email}"),
+
+      userModel = userModel.copyWith(
+        reference: userRef,
+        uid: "U$uid",
+        search: setSearchParam("S$uid ${userModel.name} ${userModel.phoneNumber} ${userModel.email}"),
       );
-      await ref.update(copy.toMap());
+
+      await userRef.update(userModel.toMap());
       if (kDebugMode) {
-        print("User document updated: U$a");
+        print("User document updated: U$uid");
       }
-      return right(copy);
+
+      return Right(userModel);
     } on FirebaseException catch (e) {
       if (kDebugMode) {
         print("FirebaseException: ${e.message}");
       }
-      return left(Failure(e.message ?? "Firebase Exception occurred"));
+      return Left(Failure(e.message ?? "Firebase Exception occurred"));
     } catch (e) {
       if (kDebugMode) {
         print("Exception: $e");
       }
-      return left(Failure(e.toString()));
+      return Left(Failure(e.toString()));
     }
   }
 
@@ -175,8 +170,7 @@ class LoginRepository {
     required String password,
   }) async {
     try {
-      UserCredential result = await _auth.createUserWithEmailAndPassword(
-          email: email, password: password);
+      UserCredential result = await _auth.createUserWithEmailAndPassword(email: email, password: password);
       if (result.user != null) {
         UserModel userModel = UserModel(
           uid: "",
@@ -193,20 +187,21 @@ class LoginRepository {
         var createUserResult = await createUser(userModel);
         return createUserResult;
       } else {
-        return left(Failure("User creation failed"));
+        return Left(Failure("User creation failed"));
       }
     } on FirebaseAuthException catch (e) {
       if (kDebugMode) {
         print("Authentication Error: ${e.message}");
       }
-      return left(Failure(e.message ?? "Authentication Error occurred"));
+      return Left(Failure(e.message ?? "Authentication Error occurred"));
     } catch (e) {
       if (kDebugMode) {
         print("Error: $e");
       }
-      return left(Failure(e.toString()));
+      return Left(Failure(e.toString()));
     }
   }
+
 
   Future passwordReset({required String email}) async {
     try {

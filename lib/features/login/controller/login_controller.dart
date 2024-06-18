@@ -31,6 +31,7 @@ class LoginController extends StateNotifier<bool> {
         _ref = ref,
         super(false);
 
+
   // Future<void> login(String password, String email, BuildContext context) async {
   //   state = true;
   //
@@ -70,29 +71,50 @@ class LoginController extends StateNotifier<bool> {
 
 
 
-
-  Future<void> login({required String email,
+  Future<void> login({
+    required String email,
     required String password,
-    required BuildContext context}) async {
-    state = true;
-    final res =
-    await _loginRepository.login(password: password, email: email);
-    state = false;
-    res.fold(
-            (l) => ScaffoldMessenger.of(context).showSnackBar(
-              SnackBar(content: Text('Failed to edit order: ')),
-            ),
-            (r) async {
-              ScaffoldMessenger.of(context).showSnackBar(
-                SnackBar(content: Text('Order added successfully!')),
-              );
-          Navigator.pushAndRemoveUntil(context,
-            MaterialPageRoute(builder: (context) => const NavigationScreen()),
-                (route) => false,
-          );
-    }
-    );
+    required BuildContext context,
+  }) async {
+    // Set state to true to indicate loading state
+
+
+    // Call the repository to perform login
+  await _loginRepository.login(password: password, email: email);
+
+    // Set state to false after login attempt (whether success or failure)
+
+    // Access ScaffoldMessengerState via the global key
+    final scaffoldMessenger = scaffoldMessengerKey.currentState;
+
+    // Handle the result using fold method on Either
+    // res.fold(
+    //       (left) {
+    //     // Handle failure (left side of Either)
+    //     scaffoldMessenger?.showSnackBar(
+    //       SnackBar(
+    //         content: Text('Failed to log in: ${left.message}'),
+    //       ),
+    //     );
+    //   },
+    //       (right) {
+    //     // Handle success (right side of Either)
+    //     scaffoldMessenger?.showSnackBar(
+    //       SnackBar(
+    //         content: Text('Logged in successfully!'),
+    //       ),
+    //     );
+
+        // Navigate to next screen on successful login
+        // Navigator.pushAndRemoveUntil(
+        //   context,
+        //   MaterialPageRoute(builder: (context) => const NavigationScreen()),
+        //       (route) => false, // This removes all routes below the new route from the stack
+        // );
+    //   },
+    // );
   }
+
 
 
   Future<void> registerUser({

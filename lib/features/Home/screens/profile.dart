@@ -1,4 +1,3 @@
-
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -16,8 +15,7 @@ class ProfilePage extends ConsumerStatefulWidget {
 
 class _ProfilePageState extends ConsumerState<ProfilePage> {
 
-
-  logOut(BuildContext context) {
+  void logOut(BuildContext context) {
     showDialog(
       context: context,
       builder: (BuildContext context) {
@@ -27,13 +25,15 @@ class _ProfilePageState extends ConsumerState<ProfilePage> {
           actions: [
             TextButton(
               onPressed: () {
-                Navigator.of(context).pop();
+                Navigator.of(context).pop();  // Pop the dialog
               },
               child: const Text('Cancel'),
             ),
             TextButton(
-              onPressed: () {
-                ref.watch(loginControllerProvider.notifier).logout(context);
+              onPressed: () async {
+                Navigator.of(context).pop();  // Pop the dialog
+                await ref.read(loginControllerProvider.notifier).logout(context);
+                // Optionally navigate to login screen or another screen
               },
               child: const Text('Logout'),
             ),
@@ -43,15 +43,15 @@ class _ProfilePageState extends ConsumerState<ProfilePage> {
     );
   }
 
-
-
   @override
   Widget build(BuildContext context) {
+    final h = MediaQuery.of(context).size.height;
+    final w = MediaQuery.of(context).size.width;
+
     return Scaffold(
-      // backgroundColor: Colors.white,
       appBar: AppBar(
         leading: IconButton(
-          icon: Icon(Icons.arrow_back),
+          icon: const Icon(Icons.arrow_back),
           onPressed: () {
             Navigator.of(context).pop();
           },
@@ -116,7 +116,7 @@ class _ProfilePageState extends ConsumerState<ProfilePage> {
                                 fontWeight: FontWeight.w500))),
                   ),
 
-                  SizedBox(height: h*0.04),
+                  SizedBox(height: h * 0.04),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
@@ -134,7 +134,6 @@ class _ProfilePageState extends ConsumerState<ProfilePage> {
                       ),
                     ],
                   ),
-
                 ],
               );
             },
@@ -146,5 +145,4 @@ class _ProfilePageState extends ConsumerState<ProfilePage> {
       ),
     );
   }
-
 }

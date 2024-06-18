@@ -9,6 +9,7 @@ import '../../../core/constants/constants.dart';
 import '../../../core/pallete/theme.dart';
 import '../../../core/widget/rounded_loading_button.dart';
 import '../../../core/widget/textformfield.dart';
+import '../../Home/screens/navigation_screen.dart';
 import '../controller/login_controller.dart';
 import 'forgot_password.dart';
 
@@ -32,6 +33,8 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
           password: passwordController.text.trim(), context: context);
     }
   }
+  final GlobalKey<ScaffoldMessengerState> scaffoldMessengerKey = GlobalKey<ScaffoldMessengerState>();
+
 
   @override
   void dispose() {
@@ -41,135 +44,175 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
   }
   @override
   Widget build(BuildContext context) {
-    return Material(
-      child: SingleChildScrollView(
-        scrollDirection: Axis.vertical,
-        child: SafeArea(
-          child:Center(
-            child: Form(
-              key: _formKey,
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                   SizedBox(height: h*0.1,),
-                  Image.asset(Constants.loginImage),
-                   SizedBox(height: h*0.05,),
-                  Align(
-                    alignment: Alignment.bottomRight,
-                    child:
-                    TextButton(onPressed: (){
-                      Navigator.push(context, MaterialPageRoute(builder: (context)=>const ForgotScreen()));
-                    }, child:  Text("Forgot Password",style: TextStyle(fontSize: w*0.04,
-                        color: Palette.redLightColor,fontWeight: FontWeight.w600),)),
-                  ),
-                  Padding(
-                    padding:  EdgeInsets.symmetric(horizontal: w* 0.06),
-                    child: Column(
-                      children: [
-                        CustomTextInput(
-                          validator: (value) {
-                            if (value == null || value.isEmpty) {
-                              return 'Please enter your email';
-                            }
-                            return null;
-                          },
-                          controller:emailController ,
-                          label: 'Email',
-                          prefixIcon:Icons.email,
-                          width: 0.7, height: 0.1,
-                           ),
-                         SizedBox(height: h* 0.02,),
-                        Consumer(
-                            builder: (context,ref,child) {
-                              final passwordVisibility = ref.watch(eyeBool);
-                              return CustomTextInput(
-                                  validator: (value) {
-                                    if (value == null || value.isEmpty) {
-                                      return 'Please enter your password';
-                                    }
-                                    return null;
-                                  },
-                                  controller:passwordController ,
-                                  maxLines: 1,
-                                  label: 'Password',
-                                  prefixIcon:
-                              Icons.lock,width: 0.7,
-                                  obscureText:passwordVisibility ,
-                                  suffixIcon:ref.watch(eyeBool)==false?
-                                  Icons.remove_red_eye_outlined:Icons.visibility_off,
-                                  height: 0.12,
-                                  onSuffixIconTap: (){
-                                    if (kDebugMode) {
-                                      print("sx");
-                                    }
-                                    ref.read(eyeBool.notifier)
-                                        .state = !passwordVisibility;
-                                    ref.watch(eyeBool)!;
-                                    if (kDebugMode) {
-                                      print(ref.watch(eyeBool));
-                                    }}
-                              );
-                            }
-                        ),
-                        const SizedBox(height: 30,),
-                        Consumer(
-                            builder: (context,ref,child) {
-                              return SizedBox(
-                                width: w*0.7,
-                                height: h*0.05,
-                                child: RoundedLoadingButton(icon: false,
-                                  backgroundColor:Palette.redLightColor,
-                                  TextColor: Colors.white,
-                                  text: 'Login',
-                                  isLoading: false, onPressed: (){
-                                if(_formKey.currentState!.validate()) {
-                                       showDialog(context: context, builder: (context){
-                                         return ConfirmationDialog(onConfirmed: (){
-                                           if(emailController.text.trim().isNotEmpty
-                                               &&passwordController.text.trim().isNotEmpty){
-                                             login();
-                                             Navigator.pop(context);
-                                           }
-                                           else{
-                                             emailController.text.trim().isEmpty?
-                                             showSnackBar(  text: ' "Enter Email"', color: true, context: context):
-                                             showSnackBar( text: 'Enter Password', color: true, context: context) ;
-                                           }
-                                           if (kDebugMode) {
-                                             print('Button pressed');
-                                           }
-                                         },
-                                             onCancel: (){
-                                               Navigator.pop(context);
-                                             },
-                                           message: 'Are you sure you want to Login?',);
-                                       });
-                                  }
-                                },),
-                              );
-                            }
-                        ),
-                         SizedBox(height: h * 0.01),
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                             Text("Don't Have an Account?",style: TextStyle(
-                              color: Colors.black54,
-                              fontSize: w * 0.04,
-                            ),),
-                            TextButton(onPressed: (){
-                              Navigator.push(context, MaterialPageRoute(builder: (context)=>const SignUpScreen()));
-                            }, child:  Text("Sign Up",style: TextStyle(fontSize: w * 0.04,
-                                color: Palette.redLightColor,fontWeight: FontWeight.w600),))
-                          ],
-                        )
-                      ],
+    final h = MediaQuery.of(context).size.height;
+    final w = MediaQuery.of(context).size.width;
+    return ScaffoldMessenger(
+      key: scaffoldMessengerKey,
+      child: Material(
+        child: SingleChildScrollView(
+          scrollDirection: Axis.vertical,
+          child: SafeArea(
+            child:Center(
+              child: Form(
+                key: _formKey,
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                     SizedBox(height: h*0.1,),
+                    Image.asset(Constants.loginImage),
+                     SizedBox(height: h*0.05,),
+                    Align(
+                      alignment: Alignment.bottomRight,
+                      child:
+                      TextButton(onPressed: (){
+                        Navigator.push(context, MaterialPageRoute(builder: (context)=>const ForgotScreen()));
+                      }, child:  Text("Forgot Password",style: TextStyle(fontSize: w*0.04,
+                          color: Palette.redLightColor,fontWeight: FontWeight.w600),)),
                     ),
-                  )
-                ],
+                    Padding(
+                      padding:  EdgeInsets.symmetric(horizontal: w* 0.06),
+                      child: Column(
+                        children: [
+                          CustomTextInput(
+                            validator: (value) {
+                              if (value == null || value.isEmpty) {
+                                return 'Please enter your email';
+                              }
+                              return null;
+                            },
+                            controller:emailController ,
+                            label: 'Email',
+                            prefixIcon:Icons.email,
+                            width: 0.7, height: 0.1,
+                             ),
+                           SizedBox(height: h* 0.02,),
+                          Consumer(
+                              builder: (context,ref,child) {
+                                final passwordVisibility = ref.watch(eyeBool);
+                                return CustomTextInput(
+                                    validator: (value) {
+                                      if (value == null || value.isEmpty) {
+                                        return 'Please enter your password';
+                                      }
+                                      return null;
+                                    },
+                                    controller:passwordController ,
+                                    maxLines: 1,
+                                    label: 'Password',
+                                    prefixIcon:
+                                Icons.lock,width: 0.7,
+                                    obscureText:passwordVisibility ,
+                                    suffixIcon:ref.watch(eyeBool)==false?
+                                    Icons.remove_red_eye_outlined:Icons.visibility_off,
+                                    height: 0.12,
+                                    onSuffixIconTap: (){
+                                      if (kDebugMode) {
+                                        print("sx");
+                                      }
+                                      ref.read(eyeBool.notifier)
+                                          .state = !passwordVisibility;
+                                      ref.watch(eyeBool)!;
+                                      if (kDebugMode) {
+                                        print(ref.watch(eyeBool));
+                                      }}
+                                );
+                              }
+                          ),
+                          const SizedBox(height: 30,),
+                          Consumer(
+                              builder: (context,ref,child) {
+                                return SizedBox(
+                                  width: w*0.7,
+                                  height: h*0.05,
+                                  child: RoundedLoadingButton(icon: false,
+                                    backgroundColor:Palette.redLightColor,
+                                    TextColor: Colors.white,
+                                    text: 'Login',
+                                    isLoading: false, onPressed: (){
+                                  if(_formKey.currentState!.validate()) {
+                                    // showDialog(
+                                    //   context: context,
+                                    //   builder: (context) {
+                                    //     return ConfirmationDialog(
+                                    //       onConfirmed: () {
+                                    //         if (emailController.text.trim().isNotEmpty && passwordController.text.trim().isNotEmpty) {
+                                    //           login();
+                                    //           Navigator.pushAndRemoveUntil(
+                                    //             context,
+                                    //             MaterialPageRoute(builder: (context) => const NavigationScreen()),
+                                    //                 (route) => false,
+                                    //           );
+                                    //         } else {
+                                    //           if (emailController.text.trim().isEmpty) {
+                                    //             showSnackBar(text: 'Enter Email', color: true, context: context);
+                                    //           } else {
+                                    //             showSnackBar(text: 'Enter Password', color: true, context: context);
+                                    //           }
+                                    //         }
+                                    //       },
+                                    //       onCancel: () {
+                                    //         Navigator.pop(context); // Only call pop here if cancel action is taken
+                                    //       },
+                                    //       message: 'Are you sure you want to Login?',
+                                    //     );
+                                    //   },
+                                    // );
+
+                                    showDialog(
+                                      context: context,
+                                      builder: (context) {
+                                        return ConfirmationDialog(
+                                          onConfirmed: () {
+                                            if (emailController.text.trim().isNotEmpty && passwordController.text.trim().isNotEmpty) {
+                                              login();
+                                              Navigator.pushAndRemoveUntil(
+                                                context,
+                                                MaterialPageRoute(builder: (context) => const NavigationScreen()),
+                                                    (route) => false,
+                                              );
+                                            } else {
+                                              if (emailController.text.trim().isEmpty) {
+                                                showSnackBar(text: 'Enter Email', color: true, context: context);
+                                              } else {
+                                                showSnackBar(text: 'Enter Password', color: true, context: context);
+                                              }
+                                            }
+                                          },
+                                          onCancel: () {
+                                            Navigator.pop(context); // Only call pop here if cancel action is taken
+                                          },
+                                          message: 'Are you sure you want to Login?',
+                                        );
+                                      },
+                                    );
+
+                                  }
+                                  },),
+                                );
+                              }
+                          ),
+                           SizedBox(height: h * 0.01),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                               Text("Don't Have an Account?",style: TextStyle(
+                                color: Colors.black54,
+                                fontSize: w * 0.04,
+                              ),),
+                              TextButton(onPressed: (){
+                                Navigator.push(context, MaterialPageRoute(builder: (context)=>const SignUpScreen()));
+                              }, child:  Text("Sign Up",style: TextStyle(fontSize: w * 0.04,
+                                  color: Palette.redLightColor,fontWeight: FontWeight.w600),))
+                            ],
+                          )
+                        ],
+                      ),
+                    )
+                  ],
+                ),
               ),
-            ),
-          ) ,
+            ) ,
+          ),
         ),
       ),
     );

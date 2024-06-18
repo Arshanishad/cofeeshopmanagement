@@ -26,6 +26,8 @@ class RoundedLoadingButton extends StatefulWidget {
 class _RoundedLoadingButtonState extends State<RoundedLoadingButton> {
   @override
   Widget build(BuildContext context) {
+    final h = MediaQuery.of(context).size.height;
+    final w = MediaQuery.of(context).size.width;
     return SizedBox(
       height: w * 0.025,
       child: ElevatedButton(

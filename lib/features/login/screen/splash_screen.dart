@@ -14,28 +14,32 @@ class SplashScreen extends ConsumerStatefulWidget {
 }
 
 class _SplashScreenState extends ConsumerState<SplashScreen> {
-  checkKeepLogin(){
-    ref.read(loginControllerProvider.notifier).checkKeepLogin(context);
-  }
   @override
   void initState() {
-    checkKeepLogin();
-    // TODO: implement initState
     super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      checkKeepLogin();
+    });
+  }
+
+  void checkKeepLogin() {
+    ref.read(loginControllerProvider.notifier).checkKeepLogin(context);
   }
 
   @override
   Widget build(BuildContext context) {
-    h=MediaQuery.of(context).size.height;
-    w=MediaQuery.of(context).size.width;
+    final h = MediaQuery.of(context).size.height;
+    final w = MediaQuery.of(context).size.width;
+
     return Material(
       child: Container(
-        padding: EdgeInsets.only(top: 100,bottom: 40),
+        padding: const EdgeInsets.only(top: 100, bottom: 40),
         height: h,
         width: w,
         decoration: const BoxDecoration(
           color: Colors.black,
-          image: DecorationImage(image: AssetImage(Constants.splashLogo),
+          image: DecorationImage(
+            image: AssetImage(Constants.splashLogo),
             fit: BoxFit.cover,
             opacity: 0.6,
           ),
@@ -43,35 +47,45 @@ class _SplashScreenState extends ConsumerState<SplashScreen> {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.spaceAround,
           children: [
-            Text("Coffee Shop",style: GoogleFonts.pacifico(
-              fontSize: 50,
-              color: Colors.white,
-            ),),
+            Text(
+              "Coffee Shop",
+              style: GoogleFonts.pacifico(
+                fontSize: 50,
+                color: Colors.white,
+              ),
+            ),
             Column(
               children: [
-                Text("Feeling Low? Take a Sip of Coffee",style: TextStyle(
-                  color: Colors.white.withOpacity(0.8),
-                  fontSize: 18,
-                  fontWeight: FontWeight.w500,
-                  letterSpacing: 1,
-                ),),
-                SizedBox(height: 80),
+                Text(
+                  "Feeling Low? Take a Sip of Coffee",
+                  style: TextStyle(
+                    color: Colors.white.withOpacity(0.8),
+                    fontSize: 18,
+                    fontWeight: FontWeight.w500,
+                    letterSpacing: 1,
+                  ),
+                ),
+                const SizedBox(height: 80),
                 InkWell(
                   splashColor: Colors.black,
-                  onTap: (){
-
+                  onTap: () {
+                    // Navigate to the next screen
+                    Navigator.pushNamed(context, '/home');
                   },
                   child: Container(
-                    padding: EdgeInsets.symmetric(vertical: 15,horizontal: 35 ),
+                    padding: const EdgeInsets.symmetric(vertical: 15, horizontal: 35),
                     decoration: BoxDecoration(
                       color: Colors.orange,
                       borderRadius: BorderRadius.circular(10),
                     ),
-                    child: Text("Get Started"),
+                    child: const Text(
+                      "Get Started",
+                      style: TextStyle(color: Colors.white),
+                    ),
                   ),
-                )
+                ),
               ],
-            )
+            ),
           ],
         ),
       ),
