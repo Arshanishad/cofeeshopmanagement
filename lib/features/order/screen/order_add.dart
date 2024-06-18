@@ -125,8 +125,6 @@ class _AddOrderPageState extends ConsumerState<AddOrderPage> {
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                CustomTextInput(controller: customerNameController, label: 'Customer Name', width: MediaQuery.of(context).size.width * 0.7, height: 0.1),
-                SizedBox(height: 10),
                 if (selectedProduct != null) ...[
                   Image.network(selectedProduct!.image),
                   SizedBox(height: 10),
@@ -136,34 +134,36 @@ class _AddOrderPageState extends ConsumerState<AddOrderPage> {
                   ),
                   SizedBox(height: 10),
                 ],
-                productListAsyncValue.when(
-                  data: (productList) {
-                    return DropdownButtonFormField<ProductModel>(
-                      value: selectedProduct,
-                      hint: Text('Select Product'),
-                      onChanged: (ProductModel? newValue) {
-                        setState(() {
-                          selectedProduct = newValue;
-                        });
-                      },
-                      items: productList.map((ProductModel product) {
-                        return DropdownMenuItem<ProductModel>(
-                          value: product,
-                          child: Text(product.productName),
-                        );
-                      }).toList(),
-                      decoration: InputDecoration(
-                        labelText: 'Product',
-                        border: OutlineInputBorder(),
-                      ),
-                    );
-                  },
-                  loading: () => CircularProgressIndicator(),
-                  error: (error, stack) {
-                    print('Error: $error');
-                    return Text('Error loading products: $error');
-                  },
-                ),
+        CustomTextInput(controller: customerNameController, label: 'Customer Name', width: MediaQuery.of(context).size.width * 0.7, height: 0.1),
+
+        // productListAsyncValue.when(
+                //   data: (productList) {
+                //     return DropdownButtonFormField<ProductModel>(
+                //       value: selectedProduct,
+                //       hint: Text('Select Product'),
+                //       onChanged: (ProductModel? newValue) {
+                //         setState(() {
+                //           selectedProduct = newValue;
+                //         });
+                //       },
+                //       items: productList.map((ProductModel product) {
+                //         return DropdownMenuItem<ProductModel>(
+                //           value: product,
+                //           child: Text(product.productName),
+                //         );
+                //       }).toList(),
+                //       decoration: InputDecoration(
+                //         labelText: 'Product',
+                //         border: OutlineInputBorder(),
+                //       ),
+                //     );
+                //   },
+                //   loading: () => CircularProgressIndicator(),
+                //   error: (error, stack) {
+                //     print('Error: $error');
+                //     return Text('Error loading products: $error');
+                //   },
+                // ),
                 SizedBox(height: 10),
                 CustomTextInput(controller: quantityController, label: 'Quantity', width: MediaQuery.of(context).size.width * 0.7, height: 0.1),
                 SizedBox(height: 10),
